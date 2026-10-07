@@ -1,0 +1,31 @@
+import numpy as np
+import sympy as sp
+import matplotlib.pyplot as plt
+
+#symbols
+x = sp.Symbol('x')
+y = sp.Symbol('y')
+T_peak = 800
+T_amb = 20
+sigma = 10
+r = sp.sqrt(x**2 + y**2)
+z_sp = T_amb + (T_peak - T_amb) * sp.exp(-r**2 / (2 * sigma**2))
+#z_sp = 10-(10 / r)
+#numpy
+x_np = np.linspace(-100, 100, 100)
+y_np = np.linspace(-100, 100, 100)
+z_np = sp.lambdify((x, y), z_sp, 'numpy')
+
+#Map Values
+X, Y = np.meshgrid(x_np, y_np)
+Z_val = z_np(X, Y)
+
+#HeatMap!
+im = plt.imshow(Z_val, cmap = 'inferno', extent = [-10, 10, -10, 10], origin = 'lower')
+#plt.figure(figsize=(5, 5))
+
+plt.xlabel('x')
+plt.ylabel('y')
+plt.colorbar(im, label = 'heat')
+plt.title('Heat around a source')
+plt.show()
